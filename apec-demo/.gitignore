@@ -1,0 +1,9 @@
+*.o
+l3fwd/l3fwd
+l3fwd/l3fwd_v6
+acl/acl
+acl/acl_v6
+maglev/maglev
+maglev/maglev_v6
+nat/nat
+nat/nat_v6

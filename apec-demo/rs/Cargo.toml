@@ -1,0 +1,20 @@
+[workspace]
+resolver = "2"
+members = ["nf-runtime", "l3fwd", "acl", "maglev", "nat"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+
+[workspace.dependencies]
+nf-runtime = { path = "nf-runtime" }
+socket2 = { version = "0.6", features = ["all"] }
+libc = "0.2"
+
+# Mirror the C build's -O3; fat LTO lets the per-packet path inline across
+# the runtime/NF crate boundary like the single-TU C build does.
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1

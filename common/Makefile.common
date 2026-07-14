@@ -1,0 +1,41 @@
+# Shared build rules. Each NF Makefile sets NF and SRC, then includes this file:
+#     NF  := nat
+#     SRC := nat.cpp
+#     include ../common/Makefile.common
+#
+# Usage:  make [L3=ipv4|ipv6]   ->  binary <NF>[_v6]
+
+PKGCONF ?= pkg-config
+CXX     ?= g++
+L3      ?= ipv4
+OPT     ?= -O3
+
+COMMON := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+
+ifneq ($(shell $(PKGCONF) --exists libdpdk && echo ok),ok)
+$(error libdpdk not found via pkg-config; install DPDK or source its environment)
+endif
+
+ifeq ($(L3),ipv6)
+  L3_FLAGS  := -DNF_IPV6
+  L3_SUFFIX := _v6
+else ifeq ($(L3),ipv4)
+  L3_FLAGS  :=
+  L3_SUFFIX :=
+else
+  $(error L3 must be ipv4|ipv6, got '$(L3)')
+endif
+
+APP := $(NF)$(L3_SUFFIX)
+
+CXXFLAGS += $(OPT) -I$(COMMON) $(shell $(PKGCONF) --cflags libdpdk)
+LDFLAGS  += $(shell $(PKGCONF) --libs libdpdk)
+
+.PHONY: all clean
+all: $(APP)
+
+$(APP): $(SRC) $(wildcard *.h) $(wildcard $(COMMON)/*.h)
+	$(CXX) $(CXXFLAGS) $(L3_FLAGS) $(SRC) -o $@ $(LDFLAGS)
+
+clean:
+	rm -f $(NF) $(NF)_v6

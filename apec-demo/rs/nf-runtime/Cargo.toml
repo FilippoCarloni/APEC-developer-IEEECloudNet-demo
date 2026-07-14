@@ -1,0 +1,10 @@
+[package]
+name = "nf-runtime"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Shared AF_PACKET run-to-completion runtime for the Rust NFs (port of common/nf_main.h)"
+
+[dependencies]
+socket2.workspace = true
+libc.workspace = true

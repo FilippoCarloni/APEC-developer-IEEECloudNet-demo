@@ -1,0 +1,12 @@
+[package]
+name = "acl"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[features]
+# Mirrors the C build's -DNF_IPV6 (make L3=ipv6).
+ipv6 = []
+
+[dependencies]
+nf-runtime.workspace = true
