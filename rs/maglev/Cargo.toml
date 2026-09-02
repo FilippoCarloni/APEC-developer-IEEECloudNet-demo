@@ -1,12 +1,22 @@
 [package]
 name = "maglev"
-version.workspace = true
-edition.workspace = true
-license.workspace = true
-
-[features]
-# Mirrors the C build's -DNF_IPV6 (make L3=ipv6).
-ipv6 = []
+version = "0.1.0"
+edition = "2024"
 
 [dependencies]
-nf-runtime.workspace = true
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+ctrlc = "3"
+pnet_datalink = "0.35"
+twox-hash = "2"
+zerocopy = { version = "0.8", features = ["derive"] }
+
+[dev-dependencies]
+criterion = "0.5"
+
+[[bench]]
+name = "extract"
+harness = false
+
+[profile.release]
+debug = true

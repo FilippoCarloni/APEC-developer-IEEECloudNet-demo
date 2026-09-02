@@ -2,16 +2,19 @@ use std::net::Ipv4Addr;
 
 use clap::Parser;
 
-mod receiver;
+mod dashboard;
+mod layout;
 
-use receiver::Receiver;
+use dashboard::Dashboard;
 
 #[derive(Parser)]
-#[command(about = "Maglev receiver")]
+#[command(about = "Live dashboard: XDP-extracted 5-tuple vs software re-parse (maglev_tui.c twin)")]
 struct Cli {
+    /// Interface to receive on
     #[arg(short, long, default_value = "veth-host")]
     iface: String,
-    
+
+    /// Comma-separated backend IPv4 addresses (names hashed into the Maglev table)
     #[arg(
         long,
         value_delimiter = ',',
@@ -21,5 +24,5 @@ struct Cli {
 }
 
 fn main() -> anyhow::Result<()> {
-    Receiver::new(Cli::parse()).run()
+    Dashboard::new(Cli::parse()).run()
 }
